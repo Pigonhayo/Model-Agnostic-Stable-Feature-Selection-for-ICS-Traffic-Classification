@@ -1,32 +1,40 @@
 import pandas as pd
 
 # CSV 불러오기
-df = pd.read_csv("/home/ice06/project/secure/mrmr_test/advice/Dataset.csv")
+df = pd.read_csv("/home/ice06/project/secure/mrmr_test/Dataset.csv")
 
 # 선택할 23개 feature
 selected_features = [
-    "end",
-    "rBytesSum",
     "endOffset",
+    "startOffset",
+    "end",
     "start",
+    "rBytesSum",
     "sBytesSum",
-   "startOffset",
-   "rPayloadSum",
-   "sPayloadSum",
-   "rPackets",
-   "sPackets",
-   "rBytesAvg",
-   "rInterPacketAvg",
-   "sLoad",
-   "rLoad",
-   "sInterPacketAvg",
-   "rPayloadAvg",
-   "rAckDelayAvg",
-   "rPshRate",
-   "sAckDelayAvg",
-   "sBytesAvg",
-   "rAckDelayMax",
-   "sPayloadAvg",
+    "sPayloadSum",
+    "rPayloadSum",
+    "rPackets",
+    "rInterPacketAvg",
+    "rLoad",
+    "sLoad",
+    "sPackets",
+    "rBytesAvg",
+    "sInterPacketAvg",
+    "rPayloadAvg",
+    "rAckDelayAvg",
+    "sAckDelayAvg",
+    "rPshRate",
+    "rAckDelayMax",
+    "sBytesAvg",
+    "duration",
+    "sPayloadAvg",
+    "sWinTCP",
+    "rWinTCP",
+    "rBytesMin",
+    "sPshRate",
+    "sBytesMin",
+    "sAckDelayMax",
+    "rBytesMax",
     "NST_M_Label"
 ]
 
@@ -53,4 +61,4 @@ selected_features = [
 df_reduced = df[selected_features]
 
 # 결과 저장
-df_reduced.to_csv("/home/ice06/project/secure/mrmr_test/advice/dataset/cv_baseline/cv_baseline.csv", index=False)
+df_reduced.to_csv("/home/ice06/project/secure/mrmr_test/dataset/check_new/check_new.csv", index=False)

@@ -172,4 +172,4 @@ if __name__ == "__main__":
 
 
 
-# python split_dataset.py --files  /home/ice06/project/secure/mrmr_test/advice/dataset/cv_baseline/cv_baseline.csv
+# python split_dataset.py --files  /home/ice06/project/secure/mrmr_test/dataset/check_new/check_new.csv

@@ -8,11 +8,11 @@ set -euo pipefail
 # Paths & labels
 # =====================
 MODE="multi"                        # "binary" | "multi"
-TRAIN_CSV="/home/ice06/project/secure/mrmr_test/advice/dataset/cv_baseline/cv_baseline_train.csv"  # 경로 각자 맞춰서 쓰세요.
-VAL_CSV="/home/ice06/project/secure/mrmr_test/advice/dataset/cv_baseline/cv_baseline_val.csv"      # 경로 각자 맞춰서 쓰세요.
-TEST_CSV="/home/ice06/project/secure/mrmr_test/advice/dataset/cv_baseline/cv_baseline_test.csv"    # 경로 각자 맞춰서 쓰세요.
+TRAIN_CSV="/home/ice06/project/secure/mrmr_test/dataset/check_new/check_new_train.csv"  # 경로 각자 맞춰서 쓰세요.
+VAL_CSV="/home/ice06/project/secure/mrmr_test/dataset/check_new/check_new_val.csv"      # 경로 각자 맞춰서 쓰세요.
+TEST_CSV="/home/ice06/project/secure/mrmr_test/dataset/check_new/check_new_test.csv"    # 경로 각자 맞춰서 쓰세요.
 LABEL_COL="NST_M_Label"             #NST_M_Label or "B" for binary
-OUTDIR="outputs/NST_M/cv_baseline"        # 경로 각자 맞춰서 쓰세요.
+OUTDIR="outputs/NST_M/check_new"        # 경로 각자 맞춰서 쓰세요.
 
 PYTHON="python3"                    # python binary selector
 TRAIN_PY="./execute_script/train_models_split_1.py"    # training script path

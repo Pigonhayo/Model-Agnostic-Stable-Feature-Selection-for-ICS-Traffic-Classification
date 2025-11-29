@@ -1,8 +1,0 @@
-0
-NST_B_Label
-sPackets
-sPayloadSum
-rttl
-startOffset
-sAckDelayAvg
-sLoad
