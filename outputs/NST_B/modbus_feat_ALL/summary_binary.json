@@ -1,0 +1,28 @@
+{
+  "mode": "binary",
+  "label_column": "NST_B_Label",
+  "classes": [
+    "0",
+    "1"
+  ],
+  "metrics": {
+    "DT": {
+      "val_acc": 1.0,
+      "val_f1w": 1.0,
+      "test_acc": 1.0,
+      "test_f1w": 1.0
+    },
+    "RF": {
+      "val_acc": 1.0,
+      "val_f1w": 1.0,
+      "test_acc": 1.0,
+      "test_f1w": 1.0
+    },
+    "ANN": {
+      "val_acc": 1.0,
+      "val_f1w": 1.0,
+      "test_acc": 1.0,
+      "test_f1w": 1.0
+    }
+  }
+}

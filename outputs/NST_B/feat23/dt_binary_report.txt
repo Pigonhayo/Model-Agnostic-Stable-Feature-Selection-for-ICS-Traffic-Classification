@@ -1,0 +1,21 @@
+=== Decision Tree (binary) ===
+[VAL] acc=0.9939, f1w=0.9939
+              precision    recall  f1-score   support
+
+           0     0.9971    0.9953    0.9962     11011
+           1     0.9809    0.9882    0.9845      2704
+
+    accuracy                         0.9939     13715
+   macro avg     0.9890    0.9917    0.9904     13715
+weighted avg     0.9939    0.9939    0.9939     13715
+
+[TEST] acc=0.9954, f1w=0.9954
+              precision    recall  f1-score   support
+
+           0     0.9988    0.9955    0.9971      7342
+           1     0.9819    0.9950    0.9884      1802
+
+    accuracy                         0.9954      9144
+   macro avg     0.9903    0.9953    0.9928      9144
+weighted avg     0.9955    0.9954    0.9954      9144
+

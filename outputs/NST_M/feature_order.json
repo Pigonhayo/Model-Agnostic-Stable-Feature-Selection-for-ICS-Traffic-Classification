@@ -1,0 +1,19 @@
+[
+  "sBytesAvg",
+  "rBytesAvg",
+  "rFinRate",
+  "rSynRate",
+  "sttl",
+  "rttl",
+  "rAckRate",
+  "sAckDelayMax",
+  "rAckDelayMax",
+  "sPackets",
+  "rPackets",
+  "sWinTCP",
+  "rWinTCP",
+  "sPayloadAvg",
+  "rPayloadAvg",
+  "sInterPacketAvg",
+  "rInterPacketAvg"
+]

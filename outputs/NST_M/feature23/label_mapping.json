@@ -1,0 +1,8 @@
+{
+  "0": "Normal",
+  "1": "ddos",
+  "2": "ip-scan",
+  "3": "mitm",
+  "4": "port-scan",
+  "5": "replay"
+}

@@ -1,0 +1,21 @@
+=== ANN (MLP) (binary) ===
+[VAL] acc=0.9739, f1w=0.9734
+              precision    recall  f1-score   support
+
+           0     0.9729    0.9952    0.9839     11011
+           1     0.9784    0.8872    0.9306      2704
+
+    accuracy                         0.9739     13715
+   macro avg     0.9757    0.9412    0.9572     13715
+weighted avg     0.9740    0.9739    0.9734     13715
+
+[TEST] acc=0.9766, f1w=0.9762
+              precision    recall  f1-score   support
+
+           0     0.9766    0.9947    0.9856      7342
+           1     0.9766    0.9029    0.9383      1802
+
+    accuracy                         0.9766      9144
+   macro avg     0.9766    0.9488    0.9619      9144
+weighted avg     0.9766    0.9766    0.9762      9144
+

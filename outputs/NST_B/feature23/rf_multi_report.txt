@@ -1,0 +1,21 @@
+=== Random Forest (multi) ===
+[VAL] acc=0.9953, f1w=0.9953
+              precision    recall  f1-score   support
+
+           0     0.9981    0.9961    0.9971     11011
+           1     0.9842    0.9922    0.9882      2704
+
+    accuracy                         0.9953     13715
+   macro avg     0.9912    0.9942    0.9927     13715
+weighted avg     0.9954    0.9953    0.9953     13715
+
+[TEST] acc=0.9960, f1w=0.9960
+              precision    recall  f1-score   support
+
+           0     0.9986    0.9963    0.9975      7342
+           1     0.9852    0.9945    0.9898      1802
+
+    accuracy                         0.9960      9144
+   macro avg     0.9919    0.9954    0.9936      9144
+weighted avg     0.9960    0.9960    0.9960      9144
+

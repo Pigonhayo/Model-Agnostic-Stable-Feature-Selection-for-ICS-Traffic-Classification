@@ -1,0 +1,12 @@
+=== Random Forest (binary) [ZERO-SHOT TEST] ===
+[TEST] acc=0.7839, f1w=0.7239
+
+              precision    recall  f1-score   support
+
+           0     0.8051    0.9629    0.8770      7314
+           1     0.3139    0.0678    0.1115      1829
+
+    accuracy                         0.7839      9143
+   macro avg     0.5595    0.5154    0.4942      9143
+weighted avg     0.7068    0.7839    0.7239      9143
+

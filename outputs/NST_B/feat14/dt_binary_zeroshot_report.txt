@@ -1,0 +1,12 @@
+=== Decision Tree (binary) [ZERO-SHOT TEST] ===
+[TEST] acc=0.5799, f1w=0.6122
+
+              precision    recall  f1-score   support
+
+           0     0.7816    0.6590    0.7151      7314
+           1     0.1620    0.2635    0.2006      1829
+
+    accuracy                         0.5799      9143
+   macro avg     0.4718    0.4613    0.4579      9143
+weighted avg     0.6576    0.5799    0.6122      9143
+

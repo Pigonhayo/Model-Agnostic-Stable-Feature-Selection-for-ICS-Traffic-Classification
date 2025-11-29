@@ -1,0 +1,12 @@
+=== ANN (MLP) (binary) [ZERO-SHOT TEST] ===
+[TEST] acc=0.2205, f1w=0.1163
+
+              precision    recall  f1-score   support
+
+           0     0.8281    0.0323    0.0621      7314
+           1     0.2009    0.9732    0.3331      1829
+
+    accuracy                         0.2205      9143
+   macro avg     0.5145    0.5027    0.1976      9143
+weighted avg     0.7026    0.2205    0.1163      9143
+

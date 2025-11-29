@@ -1,0 +1,21 @@
+=== Random Forest (binary) ===
+[VAL] acc=0.9773, f1w=0.9772
+              precision    recall  f1-score   support
+
+           0     0.9832    0.9886    0.9859     11011
+           1     0.9523    0.9312    0.9417      2704
+
+    accuracy                         0.9773     13715
+   macro avg     0.9678    0.9599    0.9638     13715
+weighted avg     0.9771    0.9773    0.9772     13715
+
+[TEST] acc=0.9776, f1w=0.9775
+              precision    recall  f1-score   support
+
+           0     0.9836    0.9886    0.9861      7342
+           1     0.9524    0.9329    0.9425      1802
+
+    accuracy                         0.9776      9144
+   macro avg     0.9680    0.9607    0.9643      9144
+weighted avg     0.9775    0.9776    0.9775      9144
+
