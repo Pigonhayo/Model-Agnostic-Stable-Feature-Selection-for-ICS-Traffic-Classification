@@ -15,7 +15,7 @@ import os
 # 경로 설정
 ##############################
 DATASET = "Dataset.csv"
-RELEVANCE_FILE = "/home/ice06/project/secure/mrmr_test/advice/dataset/icsflow/mrmr3/relevance_sorted.csv"
+RELEVANCE_FILE = "/home/ice06/project/secure/mrmr_test/advice/dataset/icsflow/mrmr/relevance_sorted.csv"
 OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/advice/dataset/mrmr_method3/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 

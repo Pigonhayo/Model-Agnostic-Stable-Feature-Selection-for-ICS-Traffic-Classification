@@ -1,150 +1,170 @@
+# 라벨 4개 포함안되는걸로 mrmr 계산
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import mutual_info_classif
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import mutual_info_score
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 import os
 
 # ============================================
-# 0) 설정값
+# 0) 출력 폴더 경로
 # ============================================
-
-DATASET = "/home/ice06/project/secure/mrmr_test/dataset/Dataset.csv"
-OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/dataset/new"
-
-# 라벨로 사용되는 컬럼들(기여도에서 제외)
-LABEL_COLS = [
-    "NST_M_Label", "NST_B_Label",
-    "IT_M_Label",  "IT_B_Label"
-]
-
-# feature selection에 사용할 라벨 값 (예: multi-class의 일부만 사용)
-ALLOWED_LABELS = ["Normal", "ddos", "ip-scan", "port-scan"]  # 너가 원하는 라벨 subset
-
+OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/ex_dataset/ouput/FWA_ddos/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# MISS 파라미터
-N_BOOTSTRAP = 30
-SAMPLE_FRAC = 0.7
-TOP_K_EACH_ROUND = 30
-PROB_THRESHOLD = 0.7
-RANDOM_STATE = 42
-
 # ============================================
-# 1) 원본 데이터 로드
+# 1) 데이터 불러오기
 # ============================================
-print("📂 Loading dataset...")
-df_full = pd.read_csv(DATASET).fillna(0)
+DATA_PATH = "/home/ice06/project/secure/mrmr_test/ex_dataset/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+LABEL_COL = " Label"  # 🔥 ICSFLOW:"NST_M_Label", FWA:" Label"
 
-# ============================================
-# 2) feature selection용 서브셋 만들기
-#    → 딱 하나의 라벨 컬럼(NST_M_Label) 기준으로 필터링
-# ============================================
-filter_label = "NST_M_Label"
+df = (
+    pd.read_csv(DATA_PATH)
+    .replace([np.inf, -np.inf], 0)
+    .fillna(0)
+)
 
-df = df_full[df_full[filter_label].isin(ALLOWED_LABELS)].reset_index(drop=True)
 
-print(f"🎯 Feature selection using rows where {filter_label} in {ALLOWED_LABELS}")
-print(f"- Original samples: {len(df_full)}")
-print(f"- Filtered samples: {len(df)}")
+# -----------------------------
+# 🔥 1-1) 모든 라벨 컬럼 자동 제거
+# -----------------------------
+# label 패턴: *_Label
+label_candidates = [col for col in df.columns if "Label" in col]
 
-# ============================================
-# 3) feature 컬럼만 추출
-# ============================================
+print("Detected label columns:", label_candidates)
 
-# 라벨 컬럼들을 제외한 나머지 숫자형 feature만 사용
-feature_df = df.drop(columns=LABEL_COLS, errors='ignore').select_dtypes(include=[np.number])
+# y 선택
+y_raw = df[LABEL_COL].astype(str)
 
-feature_names = feature_df.columns.tolist()
-X = feature_df.values
+# 🔥 feature set = 숫자형 + 라벨 제외 모든 feature
+X = df.drop(columns=label_candidates, errors="ignore")
+X = X.select_dtypes(include=[np.number])
 
-# 라벨 인코딩 (MISS에서 사용)
-y_raw = df[filter_label].astype(str)
+print(f"Final feature count = {len(X.columns)}")
+
+# Label encoding
 le = LabelEncoder()
 y = le.fit_transform(y_raw)
 
-print(f"- Total candidate features: {len(feature_names)}")
+feature_names = X.columns.tolist()
+X_np = X.values
 
 # ============================================
-# 4) MISS 알고리즘 정의
+# 2) Relevance 계산 (Mutual Information)
 # ============================================
+print("Calculating Mutual Information (Relevance)...")
 
-def miss_feature_selection(
-    X, y, feature_names,
-    n_bootstrap=30,
-    sample_frac=0.7,
-    top_k_each_round=30,
-    prob_threshold=0.7,
-    random_state=42,
-):
-    n_samples, n_features = X.shape
-    select_counts = np.zeros(n_features, dtype=int)
-    mi_sums = np.zeros(n_features)
-
-    rng = np.random.RandomState(random_state)
-
-    print("🚀 Running MISS (Stability + Mutual Information)")
-    for b in tqdm(range(n_bootstrap)):
-        idx = rng.choice(n_samples, size=int(n_samples * sample_frac), replace=True)
-        X_b = X[idx]
-        y_b = y[idx]
-
-        mi = mutual_info_classif(
-            X_b, y_b, discrete_features=False,
-            random_state=rng.randint(0, 99999)
-        )
-
-        top_k = min(top_k_each_round, n_features)
-        top_idx = np.argsort(mi)[::-1][:top_k]
-
-        select_counts[top_idx] += 1
-        mi_sums += mi
-
-    selection_prob = select_counts / n_bootstrap
-    avg_mi = mi_sums / n_bootstrap
-
-    result_df = pd.DataFrame({
-        "feature": feature_names,
-        "select_count": select_counts,
-        "selection_prob": selection_prob,
-        "avg_mi": avg_mi
-    }).sort_values(
-        by=["selection_prob", "avg_mi"],
-        ascending=[False, False]
-    ).reset_index(drop=True)
-
-    selected_df = result_df[result_df["selection_prob"] >= prob_threshold]
-
-    if len(selected_df) == 0:
-        print("⚠️ No features passed threshold → fallback to top 20")
-        selected_df = result_df.head(20)
-
-    return selected_df["feature"].tolist(), result_df, selected_df
-
-# ============================================
-# 5) MISS 실행
-# ============================================
-selected_features, result_df, selected_df = miss_feature_selection(
-    X, y, feature_names,
-    n_bootstrap=N_BOOTSTRAP,
-    sample_frac=SAMPLE_FRAC,
-    top_k_each_round=TOP_K_EACH_ROUND,
-    prob_threshold=PROB_THRESHOLD,
-    random_state=RANDOM_STATE
+mi = mutual_info_classif(
+    X_np,
+    y,
+    discrete_features=False
 )
 
-print("\n✅ Selected Features:")
-for f in selected_features:
-    print("-", f)
+relevance_df = pd.DataFrame({
+    "feature": feature_names,
+    "mi": mi
+}).sort_values("mi", ascending=False)
+
+# 저장
+relevance_path = os.path.join(OUTPUT_DIR, "relevance_sorted.csv")
+relevance_df.to_csv(relevance_path, index=False, encoding="utf-8-sig")
+print(f"Saved → {relevance_path}")
 
 # ============================================
-# 6) 결과 저장
+# 3) Redundancy 계산 함수
 # ============================================
-result_df.to_csv(os.path.join(OUTPUT_DIR, "miss_feature_scores.csv"), index=False)
-selected_df.to_csv(os.path.join(OUTPUT_DIR, "miss_selected_features.csv"), index=False)
+def mutual_info_pair(x1, x2, bins=30):
+    """continuous MI between 2 features (safe for NaN/constant)"""
+    x1 = np.asarray(x1).astype(float)
+    x2 = np.asarray(x2).astype(float)
 
-# 전체 데이터셋에서 선택된 피처만 남기기 (라벨은 전부 유지)
-df_reduced = df_full[selected_features + LABEL_COLS]
-df_reduced.to_csv(os.path.join(OUTPUT_DIR, "Dataset_miss_selected.csv"), index=False)
+    if np.nanstd(x1) == 0 or np.nanstd(x2) == 0:
+        return 0.0
 
-print("💾 Saved Dataset_miss_selected.csv")
+    c1 = pd.cut(x1, bins=bins, labels=False)
+    c2 = pd.cut(x2, bins=bins, labels=False)
+
+    c1 = np.asarray(c1)
+    c2 = np.asarray(c2)
+
+    mask = ~((np.isnan(c1)) | (np.isnan(c2)))
+    c1 = c1[mask]
+    c2 = c2[mask]
+
+    if len(c1) == 0 or len(c2) == 0:
+        return 0.0
+
+    return mutual_info_score(c1, c2)
+
+# ============================================
+# 4) Redundancy 증가 곡선 계산
+# ============================================
+print("Calculating Redundancy Curve...")
+
+sorted_features = relevance_df["feature"].tolist()
+redundancy_curve = []
+selected = []
+
+for k in tqdm(range(1, len(sorted_features) + 1)):
+    new_feat = sorted_features[k - 1]
+    selected.append(new_feat)
+
+    if len(selected) == 1:
+        redundancy_curve.append(0.0)
+    else:
+        reds = []
+        for i in range(len(selected)):
+            for j in range(i + 1, len(selected)):
+                reds.append(
+                    mutual_info_pair(
+                        df[selected[i]].values,
+                        df[selected[j]].values
+                    )
+                )
+        redundancy_curve.append(np.mean(reds))
+
+redundancy_df = pd.DataFrame({
+    "k": list(range(1, len(sorted_features) + 1)),
+    "redundancy": redundancy_curve
+})
+
+# 저장
+redundancy_path = os.path.join(OUTPUT_DIR, "redundancy_curve.csv")
+redundancy_df.to_csv(redundancy_path, index=False, encoding="utf-8-sig")
+print(f"Saved → {redundancy_path}")
+
+# ============================================
+# 5) Relevance 그래프
+# ============================================
+plt.figure(figsize=(12, 5))
+plt.plot(range(1, len(relevance_df) + 1), relevance_df["mi"].values, marker='o')
+plt.title("Relevance (MI) vs Feature Rank")
+plt.xlabel("Feature Rank (sorted by MI)")
+plt.ylabel("Relevance (MI)")
+plt.grid(True)
+plt.tight_layout()
+
+relevance_fig_path = os.path.join(OUTPUT_DIR, "relevance_curve.png")
+plt.savefig(relevance_fig_path, dpi=200)
+plt.show()
+print(f"Saved → {relevance_fig_path}")
+
+# ============================================
+# 6) Redundancy 그래프
+# ============================================
+plt.figure(figsize=(12, 5))
+plt.plot(redundancy_df["k"], redundancy_df["redundancy"], marker='o', color='red')
+plt.title("Redundancy vs k")
+plt.xlabel("k (#selected features)")
+plt.ylabel("Avg redundancy (MI between features)")
+plt.grid(True)
+plt.tight_layout()
+
+redundancy_fig_path = os.path.join(OUTPUT_DIR, "redundancy_curve.png")
+plt.savefig(redundancy_fig_path, dpi=200)
+plt.show()
+print(f"Saved → {redundancy_fig_path}")
+
+print("\nAll results saved to:", OUTPUT_DIR)
