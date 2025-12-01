@@ -14,16 +14,16 @@ import os
 ##############################
 # 경로 설정
 ##############################
-DATASET = "Dataset.csv"
-RELEVANCE_FILE = "/home/ice06/project/secure/mrmr_test/advice/dataset/icsflow/mrmr/relevance_sorted.csv"
-OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/advice/dataset/mrmr_method3/"
+DATASET = "/home/ice06/project/secure/mrmr_test/ex_dataset/SWaT Dataset.csv"
+RELEVANCE_FILE = "/home/ice06/project/secure/mrmr_test/ex_dataset/ouput/SWaT/relevance_sorted.csv"
+OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/ex_dataset/ouput/cv/SWaT/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 ##############################
 # 데이터 불러오기
 ##############################
 df = pd.read_csv(DATASET).fillna(0)
-label_col = "NST_M_Label"   # 🔥 multi-class로 변경
+label_col = "Normal/Attack"   # 🔥 ICSFLOW:"NST_M_Label", FWA:" Label", IoT:"label", SWaT:"Normal/Attack" 변경해야함!!!!!!!
 y = LabelEncoder().fit_transform(df[label_col].astype(str))
 
 # 중요도 순서대로 feature 불러오기

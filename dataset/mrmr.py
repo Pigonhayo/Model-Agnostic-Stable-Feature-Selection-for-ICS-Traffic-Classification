@@ -11,14 +11,14 @@ import os
 # ============================================
 # 0) 출력 폴더 경로
 # ============================================
-OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/ex_dataset/ouput/FWA_ddos/"
+OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/dataset/binary_icsflow/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # ============================================
 # 1) 데이터 불러오기
 # ============================================
-DATA_PATH = "/home/ice06/project/secure/mrmr_test/ex_dataset/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-LABEL_COL = " Label"  # 🔥 ICSFLOW:"NST_M_Label", FWA:" Label"
+DATA_PATH = "/home/ice06/project/secure/mrmr_test/dataset/Dataset.csv"
+LABEL_COL = "NST_B_Label"  # 🔥 ICSFLOW:"NST_M_Label", FWA:" Label", IoT:"label", SWaT:"Normal/Attack"
 
 df = (
     pd.read_csv(DATA_PATH)
@@ -44,9 +44,17 @@ X = X.select_dtypes(include=[np.number])
 
 print(f"Final feature count = {len(X.columns)}")
 
+
+# Binary label: Benign = 0, Attack = 1
+df["binary_label"] = df[LABEL_COL].apply(lambda x: 0 if x == "Benign" else 1)
+y = df["binary_label"].values
+
+""" 멀티 사용시
 # Label encoding
 le = LabelEncoder()
 y = le.fit_transform(y_raw)
+"""
+
 
 feature_names = X.columns.tolist()
 X_np = X.values
