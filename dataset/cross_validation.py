@@ -47,7 +47,7 @@ def build_models():
 ##############################
 results = []
 
-for k in tqdm(range(1, len(sorted_features) + 1)): # 전체 보고 싶으면 len(sorted_features) + 1
+for k in tqdm(range(1, 40)): # 전체 보고 싶으면 len(sorted_features) + 1
     feats = sorted_features[:k]
     X = df[feats]
 
