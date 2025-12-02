@@ -23,7 +23,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # 데이터 불러오기
 ##############################
 df = pd.read_csv(DATASET).fillna(0)
-label_col = "Normal/Attack"   # 🔥 ICSFLOW:"NST_M_Label", FWA:" Label", IoT:"label", SWaT:"Normal/Attack" 변경해야함!!!!!!!
+label_col = "Normal/Attack"   # 🔥 ICSFLOW:"NST_M_Label", FWA:" Label", IoT:"label", SWaT:"Normal/Attack" 변경해야함!!!!!!
 y = LabelEncoder().fit_transform(df[label_col].astype(str))
 
 # 중요도 순서대로 feature 불러오기
