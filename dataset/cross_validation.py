@@ -11,19 +11,21 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import os
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 ##############################
 # 경로 설정
 ##############################
-DATASET = "/home/ice06/project/secure/mrmr_test/ex_dataset/SWaT Dataset.csv"
-RELEVANCE_FILE = "/home/ice06/project/secure/mrmr_test/ex_dataset/ouput/SWaT/relevance_sorted.csv"
-OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/ex_dataset/ouput/cv/SWaT/"
+DATASET = "/home/ice06/project/secure/mrmr_test/dataset/Dataset.csv"
+RELEVANCE_FILE = "/home/ice06/project/secure/mrmr_test/dataset/binary_icsflow/relevance_sorted.csv"
+OUTPUT_DIR = "/home/ice06/project/secure/mrmr_test/ex_dataset/ouput/cv/ICSFLOW/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 ##############################
 # 데이터 불러오기
 ##############################
 df = pd.read_csv(DATASET).fillna(0)
-label_col = "Normal/Attack"   # 🔥 ICSFLOW:"NST_M_Label", FWA:" Label", IoT:"label", SWaT:"Normal/Attack" 변경해야함!!!!!!
+label_col = "label"   # 🔥 ICSFLOW:"NST_M_Label", FWA:" Label", IoT:"label", SWaT:"Normal/Attack" 변경해야함!!!!!!
 y = LabelEncoder().fit_transform(df[label_col].astype(str))
 
 # 중요도 순서대로 feature 불러오기
@@ -47,7 +49,7 @@ def build_models():
 ##############################
 results = []
 
-for k in tqdm(range(1, 40)): # 전체 보고 싶으면 len(sorted_features) + 1
+for k in tqdm(range(1, len(sorted_features) + 1)): # 전체 보고 싶으면 len(sorted_features) + 1
     feats = sorted_features[:k]
     X = df[feats]
 
